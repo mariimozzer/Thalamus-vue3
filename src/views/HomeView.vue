@@ -1,10 +1,12 @@
+
 <template>
-<MenuSGP></MenuSGP>
+ <MenuSGP></MenuSGP> 
+
+
 
 </template>
-
 <script>
-import MenuSGP from "@/components/menuLateral/MenuLSGP.vue"
+ import MenuSGP from "@/components/menuLateral/MenuLSGP.vue"
 
 export default {
   name: 'HomeView',
@@ -15,7 +17,7 @@ export default {
   },
 
   components: {
-    MenuSGP: MenuSGP
+  MenuSGP: MenuSGP,
   }
 }
 </script>

@@ -9,25 +9,34 @@ const routes = [
   {
     path: '/',
     name: 'login',
-    component: LoginView
+    component: LoginView,
+    meta: {
+      hideMenu: true
+    }
   },
 
     {
     path: '/esqueceuSenha',
     name: 'EsqueceuSenha',
-    component: EsqueceuSenhaView
+    component: EsqueceuSenhaView,
+    meta: {
+      hideMenu: true
+    }
   },
 
   {
     path: '/validarSenha', 
     name: 'ValidarSenha',
     component: ValidarSenhaView,
+    meta: {
+      hideMenu: true
+    }
    
     
   },
   {
     path: '/home',
-    name: 'home',
+    name: 'HomeView',
     component: HomeView
   },
 ]

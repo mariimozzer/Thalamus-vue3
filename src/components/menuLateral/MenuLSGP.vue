@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="submenu-administrativo1" style="text-align: center;">
-    <br><br><br>
+    <br><br><br><br><br>
     
     
             <div v-for="item in sgp" :key="item.id">

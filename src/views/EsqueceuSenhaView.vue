@@ -8,7 +8,7 @@
             <br><br>
     
             <input type="text" class="form-control" v-model="email" placeholder="Digite seu Email">
-            <button @click="resetarSenha" type="button" class="btn">
+            <button class="btn"  @click="resetarSenha" type="button" >
                         <i v-if="!loading" class="fa-solid fa-paper-plane" aria-hidden="true"></i>
                         <i v-if="loading" class="fas fa-spinner fa-spin"></i> &nbsp;
                         <span v-if="!loading">Enviar código de recuperação</span>
@@ -77,6 +77,16 @@ export default {
 </script>
 
 <style scoped>
+.btn{
+    width: 100%;
+    background-color: var(--second-color) !important;
+    color: rgb(255, 255, 255) !important;
+    padding: 10px !important;
+    margin: 6px 0 !important;
+    border: none !important;
+    border-radius: 4px !important;
+    cursor: pointer;
+}
 .box-login {
     width: 350px;
     margin: auto;

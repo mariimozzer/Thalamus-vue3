@@ -95,7 +95,7 @@ export default {
                     localStorage.setItem('userName', this.user)
                     localStorage.setItem('token', res.data.token)
                     this.loading = false
-                    console.log('logado')
+                    this.$router.push({ name: "HomeView" })
                 }
             ).catch(
                 err => {
@@ -103,7 +103,6 @@ export default {
                     this.email = ''
                     this.password = ''
                     console.log(err)
-                    console.log('não logado')
                 }
             )
         },
