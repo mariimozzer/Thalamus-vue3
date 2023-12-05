@@ -13,7 +13,7 @@
                 </div>
                 <input type="text" class="form-control" v-model="email" placeholder="roboflex@roboflex.com.br">
             </div>
-
+    
             <div class="input-group mb-3">
                 <div class="input-group-prepend">
                     <span class="input-group-text"><i class="fa-solid fa-lock"></i></span>
@@ -29,17 +29,18 @@
                 <input class="form-check-input" type="radio" id="zontec" value="zontec" v-model="local">
                 <label class="form-check-label" for="zontec"> Zontec </label>
             </div>
+
             <br>
             <div class="col-sm-12 text-center">
                 <Button class="botaoLogin" value="Entrar">
-                                  <i v-if="loading" class="fas fa-spinner fa-spin"></i> &nbsp;
-                                  <span v-if="!loading">Entrar</span>
-                                  <span v-if="loading">Processando...</span>
-                                </Button>
+                                              <i v-if="loading" class="fas fa-spinner fa-spin"></i> &nbsp;
+                                              <span v-if="!loading">Entrar</span>
+                                              <span v-if="loading">Processando...</span>
+                                            </Button>
             </div>
     
             <div class="col-sm-12" style="text-align: center; font-size: 15px;">
-                <a href="/#/esqueceuSenha" style="color: rgb(0, 0, 0);">Esqueceu sua senha ?</a>
+                <a href="/esqueceuSenha" style="color: rgb(0, 0, 0);">Esqueceu sua senha ?</a>
             </div>
         </div>
     </form>
@@ -48,6 +49,12 @@
 <script>
 import axios from 'axios';
 import Button from '../components/button/ButtonComponent.vue';
+import { createToaster } from "@meforma/vue-toaster";
+
+const toaster = createToaster({
+    position: "top-right",
+    duration: "4000",
+});
 
 export default {
     name: 'LoginComponent',
@@ -73,6 +80,9 @@ export default {
         if (localStorage.local) {
             this.local = localStorage.local
         }
+
+
+
     },
 
     watch: {
@@ -85,6 +95,15 @@ export default {
 
 
         login() {
+
+            if(!this.email ){
+                toaster.show(`Por favor, preencha o e-mail`, { type: "error" });
+            }
+
+            if(!this.password ){
+                toaster.show(`Por favor, preencha a senha`, { type: "error" });
+            }
+
             axios.post('http://192.168.0.6:8000/api/login', {
                 email: this.email,
                 password: this.password,
@@ -103,6 +122,9 @@ export default {
                     this.email = ''
                     this.password = ''
                     console.log(err)
+                    toaster.show(`E-mail e/ou senha estão incorretos!`, { type: "error" });
+
+
                 }
             )
         },

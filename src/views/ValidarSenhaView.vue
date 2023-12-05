@@ -4,36 +4,34 @@
         <div class="box-login">
             <div style="text-align: right;">
                 <div v-if="codigoValido">
-                    <button class="botaoShow" variant="outline-secondary" @click="toggleShowPassword ">
-                                <i :icon="showPasswordConf ? 'eye-fill' : 'eye-slash-fill'"></i>
-                            </button>
+                    <b-button variant="outline-secondary" @click="toggleShowPassword ">
+                        <!-- <b-icon :icon="showNewPasswordConf ? 'eye-fill' : 'eye-slash-fill'"></b-icon> -->
+                        <i class="fa-solid fa-eye" :icon="showNewPassword ? 'fa-solid fa-eye' : 'fa-solid fa-eye-slash'"></i>
+                    </b-button>
                 </div>
             </div>
             <br>
     
-            <h4 class="titulo"> Validação de Token 
+            <h4 class="titulo"> Validação de Token
                 <i class="fa-solid fa-shield-halved"></i>
             </h4>
             <hr>
-            <label style="text-align: center;">Insira o código token que você recebeu por email </label>
+            <label style="text-align: center;">Insira o código token que você recebeu por E-mail </label>
             <br><br>
     
             <div class="input-group mb-3">
                 <div class="input-group-prepend">
                     <span class="input-group-text" id="basic-addon1"><i class="fa-solid fa-user-lock"></i></span>
                 </div>
-                <input type="number" class="form-control" :disabled="codigoValido" placeholder="Digite o código do email" v-model="codigo">
+                <input type="number" class="form-control" :disabled="codigoValido" placeholder="Digite o código do e-mail" v-model="codigo">
             </div>
     
-    
-    
-    
             <button v-if="!codigoValido" @click="validarCodigo" class="b-button">
-                                    <i v-if="!loading" class="fa-solid fa-key" aria-hidden="true"></i> &nbsp;
-                                    <i v-if="loading" class="fas fa-spinner fa-spin"></i>
-                                    <span v-if="!loading">Verificar </span>
-                                    <span v-if="loading"> &nbsp; Verificando...</span>
-                                </button>
+                                            <i v-if="!loading" class="fa-solid fa-key" aria-hidden="true"></i> &nbsp;
+                                            <i v-if="loading" class="fas fa-spinner fa-spin"></i>
+                                            <span v-if="!loading">Verificar </span>
+                                            <span v-if="loading"> &nbsp; Verificando...</span>
+                                        </button>
     
             <div v-if="codigoValido">
     
@@ -59,11 +57,11 @@
                 </div>
     
                 <button @click="resetarSenha" class="b-button" v-if='passwordsFilled && !notSamePasswords && passwordValidation.valid'>
-                            <i v-if="!loading" icon="check-circle-fill" aria-hidden="true"></i>
-                            <i v-if="loading" class="fas fa-spinner fa-spin"></i> &nbsp;
-                            <span v-if="!loading">Resetar Senha</span>
-                            <span v-if="loading">Resetando...</span>
-                        </button>
+                                    <i v-if="!loading" icon="check-circle-fill" aria-hidden="true"></i>
+                                    <i v-if="loading" class="fas fa-spinner fa-spin"></i> &nbsp;
+                                    <span v-if="!loading">Resetar Senha</span>
+                                    <span v-if="loading">Resetando...</span>
+                                </button>
     
                 <transition name="hint" appear>
                     <div v-if='passwordValidation.errors.length > 0 && !submitted' class='hints'>
@@ -78,7 +76,12 @@
 
 <script>
 import axios from 'axios';
+import { createToaster } from "@meforma/vue-toaster";
 
+const toaster = createToaster({
+    position: "top-right",
+    duration: "4000",
+});
 
 export default {
     name: "ValidarSenhaComponent",
@@ -124,10 +127,14 @@ export default {
         },
 
         validarCodigo() {
-
-
-            
             this.loading = true
+
+
+            if (!this.codigo) {
+                this.loading = false;
+                toaster.show(`Por favor, preencha o código do e-mail`, { type: "error" });
+
+            }
 
             axios.post('http://192.168.0.6:8000/api/validar-codigo', { codigo: this.codigo })
                 .then(
@@ -136,6 +143,7 @@ export default {
                             this.erroCodigo = true;
                             this.codigo = ''
                             this.loading = false
+                            toaster.show(`Código incorreto ou inválido!`, { type: "error" });
 
 
 
@@ -144,11 +152,14 @@ export default {
                             this.erroCodigo = false;
                             this.codigoValido = true;
                             this.loading = false
+                            toaster.show(`Código validado com sucesso!`, { type: "success" });
+
 
                         }
                     })
                 .catch(error => {
-                    console.error(error);
+                    console.error(error);               
+
                 });
         },
 
@@ -158,15 +169,14 @@ export default {
 
             if (!this.new_password) {
                 this.loading = false
-
-
+                toaster.show(`Por favor, preencha a senha`, { type: "error" });
                 return;
 
             }
 
             if (!this.new_password_confirmation) {
                 this.loading = false
-
+                toaster.show(`Por favor, preencha a senha`, { type: "error" });
                 return;
             }
 
@@ -184,12 +194,15 @@ export default {
                         this.new_password = ''
                         this.new_password_confirmation = ''
                         this.loading = false
+                        toaster.show(`Senha resetada com sucesso!`, { type: "success" });
+                        this.$router.push({ name: "HomeView"})
+
                         console.log(response)
                     })
                     .catch(error => {
                         this.loading = false
                         this.validationState = false
-
+                        toaster.show(`Erro ao refenir senha!`, { type: "error" });
                         console.error('Erro ao redefinir a senha:', error);
                     });
             } else {
@@ -232,14 +245,13 @@ export default {
 
 <style scoped>
 .botaoShow {
-    
     background-color: var(--second-color) !important;
     color: rgb(255, 255, 255) !important;
     border: none !important;
     border-radius: 4px !important;
     cursor: pointer;
-
 }
+
 .container {
     display: flex;
     justify-content: center;

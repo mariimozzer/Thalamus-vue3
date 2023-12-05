@@ -7,13 +7,13 @@
             <label style="text-align: center;">Informe o e-mail para o qual deseja redefinir sua senha</label>
             <br><br>
     
-            <input type="text" class="form-control" v-model="email" placeholder="Digite seu Email">
-            <button class="btn"  @click="resetarSenha" type="button" >
-                        <i v-if="!loading" class="fa-solid fa-paper-plane" aria-hidden="true"></i>
-                        <i v-if="loading" class="fas fa-spinner fa-spin"></i> &nbsp;
-                        <span v-if="!loading">Enviar código de recuperação</span>
-                        <span v-if="loading">Enviando...</span>
-                    </button>
+            <input type="text" class="form-control" v-model="email" placeholder="Digite seu e-mail">
+            <button class="btn" @click="resetarSenha" type="button">
+                                <i v-if="!loading" class="fa-solid fa-paper-plane" aria-hidden="true"></i>
+                                <i v-if="loading" class="fas fa-spinner fa-spin"></i> &nbsp;
+                                <span v-if="!loading">Enviar código de recuperação</span>
+                                <span v-if="loading">Enviando...</span>
+                            </button>
             <div v-if="loading" style="text-align: center;">
                 <br>
             </div>
@@ -25,6 +25,12 @@
 
 <script>
 import axios from 'axios'
+import { createToaster } from "@meforma/vue-toaster";
+
+const toaster = createToaster({
+    position: "top-right",
+    duration: "4000",
+});
 
 
 export default {
@@ -46,13 +52,17 @@ export default {
         resetarSenha() {
             this.loading = true;
 
+            if (!this.email) {
+
+                toaster.show(`Por favor, preencha o e-mail`, { type: "error" });
+            }
 
             axios.post('http://192.168.0.6:8000/api/enviar-codigo', {
-
                 email: this.email,
 
             }).then(
                 res => {
+                    toaster.show(`E-mail enviado com sucesso!`, { type: "success" });
 
                     this.$router.push({ name: "ValidarSenha" })
                     this.loading = false;
@@ -67,17 +77,18 @@ export default {
                     this.loading = false;
                     this.email = ''
                     console.log(err)
+                    toaster.show(`E-mail não cadastrado ou incorreto`, { type: "error" });
+
                 }
             )
         },
-
 
     }
 }
 </script>
 
 <style scoped>
-.btn{
+.btn {
     width: 100%;
     background-color: var(--second-color) !important;
     color: rgb(255, 255, 255) !important;
@@ -87,6 +98,7 @@ export default {
     border-radius: 4px !important;
     cursor: pointer;
 }
+
 .box-login {
     width: 350px;
     margin: auto;

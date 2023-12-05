@@ -1,18 +1,25 @@
-import { createRouter, createWebHashHistory } from 'vue-router'
+import { createRouter, createWebHistory } from 'vue-router'
 import LoginView from '../views/LoginView.vue'
 import EsqueceuSenhaView from '../views/EsqueceuSenhaView'
 import ValidarSenhaView from '../views/ValidarSenhaView'
 import HomeView from '../views/HomeView'
-
+import AlterarSenhaView from "../views/AlterarSenhaView"
 
 const routes = [
   {
     path: '/',
-    name: 'login',
+    name: 'Login',
     component: LoginView,
     meta: {
       hideMenu: true
     }
+  },
+
+  {
+    path: '/alterarSenha',
+    name: 'AlterarSenha',
+    component: AlterarSenhaView,
+   
   },
 
     {
@@ -31,8 +38,6 @@ const routes = [
     meta: {
       hideMenu: true
     }
-   
-    
   },
   {
     path: '/home',
@@ -42,7 +47,8 @@ const routes = [
 ]
 
 const router = createRouter({
-  history: createWebHashHistory(),
+  mode: 'history',
+  history: createWebHistory(),
   routes
 })
 
