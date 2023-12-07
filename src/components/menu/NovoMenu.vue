@@ -2,55 +2,58 @@
     <div class="menu " id="menu">
         <nav class="navbar navbar-expand-lg navbar-light bg-dark" style="color: white; ">
             <a class="navbar-brand" href="/home">
-                                                        <img src="https://roboflex.com.br/wp-content/uploads/2023/05/logotipo-roboflex.png" alt="Logo" style="width: 75%; ">
-                                                    </a>
+                <img src="https://roboflex.com.br/wp-content/uploads/2023/05/logotipo-roboflex.png" alt="Logo"
+                    style="width: 75%; ">
+            </a>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav mx-auto">
-                    <button v-for="item in estrutura" :key="item.id" @mouseover="activateMenu(item)" class="btn menu-block text-white mb-2 mr-2" :class="{ 'active': item === activeMenu }" :style="{ backgroundColor: item === activeMenu ? '' : '#343537' }">
-                                &nbsp; &nbsp;{{ item.nome }}
-                              </button>
+                    <button v-for="item in estrutura" :key="item.id" @mouseover="activateMenu(item)"
+                        class="btn menu-block text-white mb-2 mr-2" :class="{ 'active': item === activeMenu }"
+                        :style="{ backgroundColor: item === activeMenu ? '' : '#343537' }">
+                        &nbsp; &nbsp;{{ item.nome }}
+                    </button>
                 </ul>
-    
+
                 <div class="icons">
-    
+
                     <div class="navbar-nav ml-auto">
                         <b-nav-item-dropdown right style="color: white;">
-                            <template v-slot:button-content ><i style="color: white;"  class="fa-solid fa-circle-user"></i>
-                                                <span class="username" style="color: white;">&nbsp; Olá, {{ userName }}</span>
-</template>
-            <b-dropdown-item style="color: black" href="/alterarSenha">
-            <span style="color: black;"><i class="fa-solid fa-user-gear"></i>&nbsp; Alterar Senha</span>
-           </b-dropdown-item>
-        <b-dropdown-item style="color: black" @click="logout">
-            <span style="color: black;"><i class="fa-solid fa-right-from-bracket"></i>&nbsp; Logout</span>
-           </b-dropdown-item>
-         
-       </b-nav-item-dropdown>
-  </div>
-</div>
+                            <template v-slot:button-content><i style="color: white;"
+                                    class="fa-solid fa-circle-user"></i>
+                                <span class="username" style="color: white;">&nbsp; Olá, {{ userName }}</span>
+                            </template>
+                            <b-dropdown-item style="color: black" href="/alterarSenha">
+                                <span style="color: black;"><i class="fa-solid fa-user-gear"></i>&nbsp; Alterar
+                                    Senha</span>
+                            </b-dropdown-item>
+                            <b-dropdown-item style="color: black" @click="logout">
+                                <span style="color: black;"><i class="fa-solid fa-right-from-bracket"></i>&nbsp;
+                                    Logout</span>
+                            </b-dropdown-item>
+
+                        </b-nav-item-dropdown>
+                    </div>
+                </div>
             </div>
         </nav>
 
 
-     
-    
-        <div v-if="activeMenu " class="content" :style="{ backgroundColor: activeMenu.color} ">
-      <div v-for="submenu in activeMenu.filho" :key="submenu.id" class="submenu-column ">
-        <h6 style="color: rgb(0, 0, 0);">{{ submenu.nome }}</h6>
-        <div v-if="submenu.filho.length > 0 " >
-            <a class="submenu-link"
-            v-for="subsubmenu in submenu.filho"
-            :key="subsubmenu.id"
-            style="text-decoration: none; color: rgb(0, 0, 0);"
-          >
-            {{ subsubmenu.nome }}
-          </a>
-        </div>
-      </div>
-    </div>
-       
 
-    
+
+        <div v-if="activeMenu " class="content" :style="{ backgroundColor: activeMenu.color} ">
+            <div v-for="submenu in activeMenu.filho" :key="submenu.id" class="submenu-column ">
+                <h6 style="color: rgb(0, 0, 0);">{{ submenu.nome }}</h6>
+                <div v-if="submenu.filho.length > 0 ">
+                    <a class="submenu-link" v-for="subsubmenu in submenu.filho" :key="subsubmenu.id"
+                        style="text-decoration: none; color: rgb(0, 0, 0);">
+                        {{ subsubmenu.nome }}
+                    </a>
+                </div>
+            </div>
+        </div>
+
+
+
     </div>
 </template>
   

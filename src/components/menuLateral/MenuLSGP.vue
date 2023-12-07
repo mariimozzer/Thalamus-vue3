@@ -1,22 +1,21 @@
 <template>
     <div>
         <div class="submenu-administrativo1" style="text-align: center;">
-    <br><br><br><br><br>
-    
-    
+            <br><br><br><br><br>
+
             <div v-for="item in sgp" :key="item.id">
                 <div v-if="item.filho.length > 0">
-    
+
                     <h6 style="color: rgb(255, 255, 255);"> {{ item.nome }}</h6>
                     <div v-for="filho in item.filho" :key="filho.id" class="submenu-column">
                         <div class="categorias1">
                             <a style="text-decoration: none; color: rgb(255, 255, 255);">{{ filho.nome }}</a>
-    
+
                         </div>
                     </div>
                 </div>
             </div>
-    
+
         </div>
     </div>
 </template>
@@ -37,7 +36,7 @@ export default {
     methods: {
 
         getAllSidebar() {
-            axios.get(`http://192.168.0.6:8000/api/menu/estrutura/34
+            axios.get(`http://192.168.0.6:8000/api/menu/estrutura/7
             `)
                 .then(response => {
                     this.sgp = response.data.data.map((p) => new Menu(p));

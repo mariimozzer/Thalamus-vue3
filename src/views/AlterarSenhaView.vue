@@ -1,6 +1,6 @@
 <template>
     <div class="container">
-        <br><br><br>
+        <br>
         <div class="box-login">
     
             <div style="text-align: right;">
@@ -65,7 +65,9 @@
                 <span v-if="!loading">Salvar </span>
                 <span v-if="loading">Salvando...</span>
             </b-button>
+            
         </div>
+        <br><br><br><br><br>
     </div>
 </template>
   

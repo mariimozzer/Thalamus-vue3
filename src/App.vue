@@ -35,6 +35,7 @@ export default ({
 <style>
 .router {
     margin-left: 900px;
+    margin-bottom: 100px;
 }
 
 .footer {
@@ -99,6 +100,7 @@ export default ({
 body {
     font-family: 'montserrat', sans-serif;
     /* background-color:  #343537 !important; */
+    
 }
 
 header {
