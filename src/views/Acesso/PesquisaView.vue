@@ -8,24 +8,23 @@
         <div>
 
 
-            <div class="d-flex col-lg-12">
+            <div class="d-flex col-lg-12 justify-content-around">
 
                 <div style="margin: 0px 20px 0px 0px;">
                     <label for="dataInicial">Data Inicial:</label>
-                    <input type="date" v-model="filtro.inicial" id="dataInicial" class="form-control borda-campos" />
+                    <input type="date" v-model="filtro.inicial" id="dataInicial" class="form-control" />
                 </div>
 
 
                 <div style="margin: 0px 20px 0px 0px;">
                     <label for="dataFinal">Data Final:</label>
-                    <input type="date" v-model="filtro.final" ref="dataFinal" id="dataFinal"
-                        class="form-control borda-campos" />
+                    <input type="date" v-model="filtro.final" ref="dataFinal" id="dataFinal" class="form-control" />
                 </div>
 
 
                 <div style="margin: 0px 20px 0px 0px;">
                     <label for="visitante">Visitante</label>
-                    <select v-model="filtro.visitante" id="visitante" class="select-borda form-control borda-campos"
+                    <select v-model="filtro.visitante" id="visitante" class="form-control form-select"
                         style="width: 100px;">
                         <option>Sim</option>
                         <option>Não</option>
@@ -35,13 +34,13 @@
 
                 <div style="margin: 0px 20px 0px 0px;">
                     <label for="pessoa">Nome</label>
-                    <input type="text" v-model="filtro.nome" id="nome" class="form-control borda-campos" />
+                    <input type="text" v-model="filtro.nome" id="nome" class="form-control" />
                 </div>
 
 
                 <div style="margin: 0px 20px 0px 0px;">
                     <label for="setor">Setor</label>
-                    <select v-model="setorSelecionado" id="setor" class="select-borda form-control borda-campos"
+                    <select v-model="setorSelecionado" id="setor" class="form-control form-select"
                         style="width: 180px;">
                         <option v-for="setor in listaSetores" :key="setor.id" :value="setor.id">
                             {{ setor.nome }}
@@ -52,7 +51,8 @@
 
                 <div style="margin: 0px 20px 0px 0px;">
                     <label for="local">Local</label>
-                    <select class="select-borda form-control borda-campos" v-model="localSelecionado" style="width: 120px;">
+                    <select class="form-control form-select" v-model="localSelecionado"
+                        style="width: 120px;">
                         <option v-for="local in localLista" :key="local.id" :value="local.id">{{ local.local_nome }}
                         </option>
                     </select>
@@ -65,11 +65,12 @@
             <div style="display: flex; flex-flow: row; justify-content: center; margin-top: 20px; margin-bottom: 20px;">
 
                 <div style="margin: 0px 20px 0px 0px;">
-                    <button @click="pesquisar" class="btn btn-color">Pesquisar&nbsp;<i class="fa-solid fa-magnifying-glass"></i></button>
+                    <button @click="pesquisar" class="btn btn-primary">Pesquisar&nbsp;<i
+                            class="fa-solid fa-magnifying-glass"></i></button>
                 </div>
 
                 <div>
-                    <button @click="limparCampos" class="btn btn-color">Limpar&nbsp;</button>
+                    <button @click="limparCampos" class="btn btn-primary">Limpar&nbsp;</button>
                 </div>
 
             </div>
@@ -112,19 +113,21 @@
 
             <div class="d-flex align-items-baseline justify-content-end mt-4">
 
-                <button @click="irParaPagina(pagina - 1)" :disabled="pagina === 1" class="btn btn-color">Página Anterior</button>
+                <button @click="irParaPagina(pagina - 1)" :disabled="pagina === 1" class="btn btn-primary">Página
+                    Anterior</button>
 
                 <span class="mr-2 ml-2">{{ pagina }} de {{ totalPaginas }}</span>
 
-                <button @click="irParaPagina(pagina + 1)" :disabled="pagina === totalPaginas" class="btn btn-color">Próxima Página</button>
+                <button @click="irParaPagina(pagina + 1)" :disabled="pagina === totalPaginas"
+                    class="btn btn-primary">Próxima Página</button>
                 <!-- <button @click="generatePDF" class="btn btn-color ml-4">Salvar PDF</button> -->
-                
+
             </div>
 
 
         </div>
 
-
+        <br><br><br><br>
 
     </div>
 </template>
@@ -257,7 +260,7 @@ export default {
                     console.error("Erro ao buscar dados:", error);
                 });
 
-            this.renderizarGraficoBarras();
+            
         },
 
         carregarSetores() {
@@ -307,27 +310,13 @@ export default {
 </script>
 
 <style scoped>
-.select-borda {
-    -webkit-appearance: none !important;
-    -moz-appearance: none !important;
-    background-color: #fff;
-    height: 39px;
-    width: 100%;
-    background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAUCAMAAACtdX32AAAAdVBMVEUAAAD///8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAhMdQaAAAAJ3RSTlMAAAECAwQGBwsOFBwkJTg5RUZ4eYCHkJefpaytrsXGy8zW3+Do8vNn0bsyAAAAYElEQVR42tXROwJDQAAA0Ymw1p9kiT+L5P5HVEi3qJn2lcPjtIuzUIJ/rhIGy762N3XaThqMN1ZPALsZPEzG1x8LrFL77DHBnEMxBewz0fJ6LyFHTPL7xhwzWYrJ9z22AqmQBV757MHfAAAAAElFTkSuQmCC);
-    background-position: 100%;
-    background-repeat: no-repeat;
-    border: 1px solid #ccc;
-    padding: 0.5rem;
-    border-radius: 0;
-}
 
-.borda-campos {
+/* .borda-campos {
     border: solid;
     border-radius: 5px;
     border-width: 1px;
     border-color: lightgrey;
     padding: 5px 10px 5px 10px;
     width: fit-content;
-
-}
+} */
 </style>

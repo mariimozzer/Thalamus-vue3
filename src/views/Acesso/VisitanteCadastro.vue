@@ -1,6 +1,8 @@
 <template>
     <div class="container">
+
         <br>
+
         <div class="toast" id="successToast" role="alert" aria-live="assertive" aria-atomic="true" v-if="showToast">
             <div class="toast-header">
                 <strong class="me-auto">Success</strong>
@@ -16,7 +18,9 @@
                 <h2>{{ modoCadastro ? "Cadastrar" : "Editar" }} Visitante</h2>
             </div>
         </div>
+
         <div class="d-flex row flex-wrap">
+
             <!-- FORNMULÁRIO DE CADASTRO DE PESSOA -->
             <div class="col-6 col-md-6 col-sm-12">
                 <div style="margin: 10px 0 10px 0;">
@@ -55,26 +59,33 @@
             </div>
 
 
-
             <!-- FOTO -->
             <div class="col-6 col-md-6 col-sm12">
+
                 <div class="mt-2">
-                    <h5>Captura de imagem do visitante</h5>
-                    <button class="mx-2 btn btn-color" fab dark small @click="toggleCamera" v-if="!isCameraOpen">
+                    
+                    <h5>Foto do visitante</h5>
+
+                    <button class="mx-2 btn btn-primary" fab dark small @click="toggleCamera" v-if="!isCameraOpen">
                         <span class="material-symbols-outlined">photo_camera</span>
                     </button>
-                    <button class="mx-2 btn btn-color" fab dark small @click="toggleCamera"
+                    
+
+                    <button class="mx-2 btn btn-primary" fab dark small @click="toggleCamera"
                         v-if="isCameraOpen && !isPhotoTaken">
                         <span class="material-symbols-outlined">no_photography</span>
                     </button>
-                    <button class="mx-2 btn btn-color" fab dark small color="primary" @click="captureImage"
+
+                    <button class="mx-2 btn btn-primary" fab dark small color="primary" @click="captureImage"
                         v-if="isCameraOpen">
                         <span class="material-symbols-outlined">add_a_photo</span>
                     </button>
-                    <button class="mx-2 btn btn-color" fab dark small color="primary" @click="discardImage"
+
+                    <button class="mx-2 btn btn-primary" fab dark small color="primary" @click="discardImage"
                         v-if="isCameraOpen">
                         <span class="material-symbols-outlined">delete</span>
                     </button>
+
                 </div>
 
 
@@ -83,7 +94,7 @@
                 <div class="mt-3" v-if="!fotoPessoa && !isPhotoTaken && !isCameraOpen">
 
                     <img src="../../../public/img/user-avatar.png" alt="Imagem em Base64"
-                        style="border-radius: 10px; max-width: 80%; max-height: 80%; border: solid; border-color: lightgrey; border-width: 1px;">
+                        style="border-radius: 10px; max-width: 500px; max-height: 400px; border: solid; border-color: lightgrey; border-width: 1px;">
 
                 </div>
 
@@ -92,10 +103,8 @@
                 <div>
                     <div class="mt-3">
 
-                        <video ref="video" width="500" height="400" autoplay
-                            v-if="isCameraOpen && !isPhotoTaken"></video>
-                        <img :src="imagePath || imageBase64" alt="" v-if="isPhotoTaken"
-                            style="max-width: 100%; max-height: 400px;" />
+                        <video ref="video" width="500" height="400" autoplay v-if="isCameraOpen && !isPhotoTaken"></video>
+                        <img :src="imagePath || imageBase64" alt="" v-if="isPhotoTaken" style="max-width: 100%; max-height: 400px;" />
 
                     </div>
                 </div>
@@ -109,22 +118,16 @@
 
                 </div>
 
-
-
-
-
-
-
-
-
             </div>
+
+
         </div>
 
 
         <div class="d-flex col-12 justify-content-end mt-3">
             <div>
-                <button @click="cancelarAcao" class="btn btn-color">Cancelar</button>
-                <button @click="salvarVisitante" class=" btn btn-color">Salvar</button>
+                <button @click="cancelarAcao" class="btn btn-primary mr-3">Cancelar</button>
+                <button @click="salvarVisitante" class=" btn btn-primary">Salvar</button>
             </div>
         </div>
 
@@ -262,29 +265,6 @@ export default {
 
 
 
-       /*  captureImage() {
-            const canvas = document.createElement('canvas');
-            canvas.width = this.video.videoWidth;
-            canvas.height = this.video.videoHeight;
-            const context = canvas.getContext('2d');
-            context.drawImage(this.video, 0, 0, canvas.width, canvas.height);
-
-            canvas.toBlob((blob) => {
-                const reader = new FileReader();
-                reader.onloadend = () => {
-                    this.imageBase64 = reader.result; //imageBase64 recebe a string da imagem
-                    this.isPhotoTaken = true; // foto foi tirada true
-                    //this.replacePhoto = true; // replace false
-
-                    //this.fotoPessoa = this.imageBase64; // fotopessoa recebe a string da imagem base64
-
-                };
-                reader.readAsDataURL(blob);
-            }, 'image/png');
-        }, */
-
-
-
         captureImage() {
             const canvas = document.createElement('canvas');
             canvas.width = this.video.videoWidth;
@@ -316,8 +296,6 @@ export default {
             }, 'image/png');
 
         },
-
-
 
 
         obterPessoaId(id) {
@@ -385,8 +363,6 @@ export default {
          toaster.show(`Visitante cadastrado`, { type: "success" });
 
         },
-
-
 
 
 

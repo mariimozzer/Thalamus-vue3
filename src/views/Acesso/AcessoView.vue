@@ -8,6 +8,7 @@
             <!-- COLUNA 1 -->
             <div class="col-lg-6 col-md-12">
                 <div class="auto p-4">
+
                     <!-- local do acesso -->
                     <div style="display: flex; flex-flow: row; align-items: baseline;">
                         <label style="margin-right: 10px;">Empresa: </label>
@@ -17,6 +18,7 @@
                             </option>
                         </select>
                     </div>
+
                     <!-- input de pesquisa -->
                     <div class="input-group mt-3 mb-4">
                         <div class="input-group-prepend">
@@ -24,9 +26,9 @@
                                 <i class="fa-solid fa-magnifying-glass"></i>
                             </span>
                         </div>
-                        <input type="text" class="form-control" placeholder="Pesquisar acessos" aria-label="Pesquisa"
-                            aria-describedby="basic-addon1" />
+                        <input v-model="filtroNome"  @input="pesquisaComFiltro" type="text" class="form-control" placeholder="Pesquisar acessos" />
                     </div>
+
                     <!-- TABELA DE ACESSOS -->
                     <div style="max-height: 600px; margin-top: 10px;">
                         <table class="table">
@@ -66,17 +68,28 @@
             </div>
             <!-- COLUNA 2 -->
             <div class="col-lg-6 col-md-12">
-                <div class="d-flex row"
-                    style="border: solid 1px lightgray; border-radius: 20px; margin-top: 70px; margin-bottom: 20px; margin-left: 20px; margin-right: 20px;">
+                <div class="d-flex row" style="border: solid 1px lightgray; border-radius: 20px; margin-top: 70px; margin-bottom: 20px; margin-left: 20px; margin-right: 20px;">
+
+
                     <!-- FOTO DA ÚLTIMA PESSOA QUE PASSOU NA CATRACA -->
+
                     <img v-if="mostraFoto" :src="fotoPessoa" alt="Foto Acesso"
                         style="object-fit:none; border: solid 1px lightgray; border-radius: 20px;" />
+
+
                     <!-- IMAGEM DE BACKGROUND QUANDO NÃO HÁ FOTO DE PESSOA -->
+
                     <img src="../../../public/img/user-avatar.png" v-if="!mostraFoto" alt="Foto Acesso" style="object-fit:contain" />
+
+
                 </div>
+
                 <div class="d-flex justify-content-center" v-if="this.mostraFoto">
+                    
                     <p style="color: green;">Acesso permitido</p>
+                    
                 </div>
+
             </div>
 
         </div>
@@ -120,6 +133,8 @@ export default {
             localData: [],
             lastPage: null,
             wsService: new WebSocketService(),
+            filtroNome: '',
+            page: 1,
         };
     },
 
@@ -140,9 +155,44 @@ export default {
             this.alterarLocal();
         }
 
+        this.buscaAcessos(this.page);
+
     },
 
     methods: {
+
+        
+
+        pesquisaComFiltro() {
+            this.pesquisaAcessos(this.filtroNome);
+        },
+
+        async pesquisaAcessos(searchTerm = '') {
+
+            try {
+
+                const response = await fetch(`http://192.168.0.6:8000/api/local/${this.localSelecionado}/acessos}`);
+                //const response = await fetch(`http://192.168.0.6:8000/api/acesso`);
+
+                const responseData = await response.json();
+
+                this.acessos = responseData.data || [];
+
+                this.lastPage = responseData.last_page || 1;
+
+                this.page = 1;
+
+                this.acessos = this.acessos.filter(item => item.nomeCompleto.toLowerCase().includes(searchTerm.toLowerCase())
+
+                );
+
+            } catch (error) {
+
+                console.error('Error:', error);
+
+            }
+
+        },
 
         replaceIcon() {
             this.results = this.text.replace(this.text, this.newText);
@@ -233,8 +283,8 @@ export default {
                     });
 
                     if (visitanteInfo.data.path_image) {
-                        const urlfoto = `${api.defaults.caminhoFoto}`;
-                        /* const urlfoto = 'http://192.168.0.6:8000/storage/'; */
+                       // const urlfoto = `${api.defaults.caminhoFoto}`;
+                       const urlfoto = 'http://192.168.0.6:8000/storage/'; 
                         this.fotoPessoa = urlfoto + visitanteInfo.data.path_image;
                         this.mostraFoto = true;
                         this.buscaAcessos();
@@ -251,18 +301,24 @@ export default {
                             });
                     });
                     if (colaboradorInfo.data.path_image) {
-                        const urlfoto = `${api.defaults.caminhoFoto}`;
-                        //const urlfoto = 'http://192.168.0.6:8000/storage/';
+                       // const urlfoto = `${api.defaults.caminhoFoto}`;
+                       const urlfoto = 'http://192.168.0.6:8000/storage/';
                         this.fotoPessoa = urlfoto + colaboradorInfo.data.path_image;
                         this.mostraFoto = true;
                         this.buscaAcessos();
                     }
+
                 } else if (messageData.mensagem === "acesso_negado") {
+
                     console.log(messageData.mensagem);
+
                     this.mostraFoto = false;
+
                 }
             } catch (error) {
+
                 console.error('Mensagem não reconhecida no Acesso', error);
+
             }
         },
 
