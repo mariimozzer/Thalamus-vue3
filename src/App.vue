@@ -4,7 +4,7 @@
             <NovoMenu v-if="!$route.meta.hideMenu"></NovoMenu>
         </div>
     </header>
-    <div>
+    <div class="router">
         <br><br><br>
         <router-view />
     
@@ -34,7 +34,7 @@ export default ({
 
 <style>
 .router {
-    margin-left: 900px;
+    margin-left: 300px;
     margin-bottom: 100px;
 }
 
