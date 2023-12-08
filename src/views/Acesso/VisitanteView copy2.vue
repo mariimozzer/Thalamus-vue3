@@ -1,9 +1,5 @@
 <template>
-
-    <MenuLSGP></MenuLSGP>
-
     <div class="container">
-        
         <br>
 
         <div class="mt-3">
@@ -49,7 +45,7 @@
                         </tr>
                     </thead>
                     <tbody style="text-align: left;">
-                        <tr v-for="item in visitantesFiltrados" :key="item.id">
+                        <tr v-for="item in paginatedData" :key="item.id">
                             <td>{{ item.nomeCompleto }}</td>
                             <td>{{ item.CPF }}</td>
                             <td>{{ mostraGenero(item.sexo) }}</td>
@@ -91,7 +87,26 @@
                 </div>
 
 
-                
+                <!-- paginação -->
+                <nav>
+                    <ul class="pagination">
+                        <li class="page-item" :class="{ disabled: currentPage === 0 }">
+                            <a class="page-link" href="#" aria-label="Previous" @click="prevPage">
+                                <span aria-hidden="true">&laquo;</span>
+                            </a>
+                        </li>
+                        <li v-for="n in numberOfPages" :key="n" class="page-item"
+                            :class="{ active: n === currentPage }">
+                            <a class="page-link" href="#" @click="setPage(n)">{{ n + 1 }}</a>
+                        </li>
+                        <li class="page-item" :class="{ disabled: currentPage === numberOfPages - 1 }">
+                            <a class="page-link" href="#" aria-label="Next" @click="nextPage">
+                                <span aria-hidden="true">&raquo;</span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+
 
 
             </div>
@@ -221,7 +236,7 @@
         </div>
         <!-- fim modal -->
 
-        <!-- Modal -->
+        <!-- Modal excluir -->
         <div class="modal fade" id="staticBackdrop" tabindex="-1" aria-labelledby="staticBackdropLabel"
             aria-hidden="true">
             <div class="modal-dialog">
@@ -241,6 +256,7 @@
                 </div>
             </div>
         </div>
+        <!-- fim modal excluir -->
 
 
         <br><br><br>
@@ -256,8 +272,7 @@ import setorService from '../../service/setor-service';
 import WebSocketService from '../../service/websocketservice';
 import { createToaster } from "@meforma/vue-toaster";
 import api from '../../service/api';
-import { QrcodeStream } from 'vue-qrcode-reader';
-import MenuLSGP from '@/components/menuLateral/MenuLSGP.vue';
+import { QrcodeStream } from 'vue-qrcode-reader'
 
 const toaster = createToaster({
     position: "top-right",
@@ -270,7 +285,6 @@ export default {
     components: {
 
         QrcodeStream,
-        MenuLSGP,
 
     },
 
@@ -295,16 +309,25 @@ export default {
             qrcodeLeitura: '',
             cameraAberta: false,
             leuQrcodeCamera: '',
+
             visitantes: [],
             localSelecionado: '',
             localData: [],
+
             page: 1,
             lastPage: null,
+
+
             mostraAlerta: false,
             wsService: new WebSocketService(),
             alertMessage: '',
             qrcodeWebcam: null,
-            mostraAlertaWebcam: false
+            mostraAlertaWebcam: false,
+
+
+            currentPage: 0,
+            itemsPerPage: 10,
+            filtro:'',
 
         }
     },
@@ -324,10 +347,14 @@ export default {
     },
 
     mounted() {
+
         this.buscaVisitantes(this.page);
+
+        console.log(this.numberOfPages)
     },
 
     computed: {
+
         setoresFiltrados() {
             return this.setores.filter(setor => {
                 const buscaSetor = this.filtroSetor.toLowerCase();
@@ -337,15 +364,47 @@ export default {
             });
         },
 
-        visitantesFiltrados() {
+        /* visitantesFiltrados() {
             const buscaNome = this.filtroNome.toLowerCase();
             return this.visitantes.filter(item =>
                 item.nomeCompleto.toLowerCase().includes(buscaNome)
             );
+        }, */
+
+        paginatedData() {
+            const startIndex = this.currentPage * this.itemsPerPage;
+            const endIndex = startIndex + this.itemsPerPage;
+            let visitantesFiltrados = this.visitantes.filter(item => {
+                return item.nomeCompleto.toLowerCase().includes(this.filtro.toLowerCase());
+            });
+
+            console.log(visitantesFiltrados)
+            return visitantesFiltrados.slice(startIndex, endIndex);
         },
+
+        numberOfPages() {
+            return Math.ceil(this.visitantes.length / this.itemsPerPage);
+
+        },
+        
     },
 
     methods: {
+
+        setPage(pageNumber) {
+            this.currentPage = pageNumber;
+        },
+        prevPage() {
+            if (this.currentPage > 0) {
+                this.currentPage--;
+            }
+        },
+        nextPage() {
+            if (this.currentPage < this.numberOfPages - 1) {
+                this.currentPage++;
+            }
+           
+        },
 
 
         async buscaLocal() {
@@ -719,7 +778,17 @@ export default {
 
         },
 
-        async buscaVisitantes(page) {
+        buscaVisitantes() {
+            api.get('/visitante')
+            .then((response) => {
+                    this.pessoas = response.data.data.map((p) => new Pessoa(p));
+                })
+                .catch(error => {
+                    console.log(error)
+                })
+        },
+
+        /* async buscaVisitantes(page) {
             try {
                 //const response = await fetch(`http://192.168.0.6:8000/api/visitante?page=${page}`);
                 const response = await fetch(`${api.defaults.baseURL}/visitante?page=${page}`);
@@ -735,7 +804,10 @@ export default {
             toaster.show(`Erro ao buscar visitantes`, { type: "error" });
 
             }
-        },
+        }, */
+
+
+        
 
         ordenarPessoas(a, b) {
             return (a.id < b.id) ? -1 : (a.id > b.id) ? 1 : 0;

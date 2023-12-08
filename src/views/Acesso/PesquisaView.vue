@@ -1,9 +1,12 @@
 <template>
+
+     <MenuLSGP></MenuLSGP>
+
     <div class="container">
 
         <br>
 
-        <h2 style="text-align: center; margin: 10px 0px 20px 0px;">Pesquisa</h2>
+        <h2 class="titulo">Pesquisa</h2>
 
         <div>
 
@@ -137,11 +140,18 @@
 import axios from 'axios';
 import moment from 'moment-timezone';
 //import html2pdf from 'html2pdf.js';
+import MenuLSGP from '@/components/menuLateral/MenuLSGP.vue';
 
 
 export default {
 
     name: "PesquisaView",
+
+    components: {
+
+        MenuLSGP,
+
+    },
 
     data() {
         return {

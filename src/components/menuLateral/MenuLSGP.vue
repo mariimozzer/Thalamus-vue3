@@ -3,7 +3,7 @@
         <div class="submenu-administrativo1" style="text-align: center;">
             <br><br><br><br><br>
 
-            <div v-for="item in sgp" :key="item.id">
+           <!--  <div v-for="item in sgp" :key="item.id">
                 <div v-if="item.filho.length > 0">
 
                     <h6 style="color: rgb(255, 255, 255);"> {{ item.nome }}</h6>
@@ -14,7 +14,36 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> -->
+
+            <!--  <div v-for="item in sgp" :key="item.id">
+                     <div v-if="item.filho.length > 0"> 
+
+                         <h6 style="color: rgb(255, 255, 255);"> {{ item.nome }}</h6>
+                        <div v-for="filho in item.filho" :key="filho.id" class="submenu-column">
+                            <div class="categorias1" >
+                                <a :href="devURL + filho.url" style="text-decoration: none; color: rgb(255, 255, 255);">{{ filho.nome }}</a>
+                          
+                               {{ devURL + filho.url }}
+                            </div>
+                        </div> 
+                     </div>
+                </div> -->
+
+                <div v-for="item in sgp" :key="item.id">
+                         <div v-if="item.filho.length > 0"> 
+
+                             <h6 style="color: rgb(255, 255, 255);"> {{ item.nome }}</h6>
+                            <div v-for="filho in item.filho" :key="filho.id" class="submenu-column">
+                                <a :href="devURL + filho.url" style="text-decoration: none; color: rgb(255, 255, 255);">
+                                    <div class="categorias1" >
+                                        <span  style="text-decoration: none; color: rgb(255, 255, 255);">{{ filho.nome }}</span>
+                                      <!--  {{ devURL + filho.url }} -->
+                                    </div>
+                                </a>
+                            </div> 
+                         </div>
+                    </div>
 
         </div>
     </div>
@@ -23,13 +52,15 @@
 <script>
 import axios from 'axios'
 import Menu from '@/models/Menu.js'
+import api from '../../service/api'
 
 export default {
     name: "TesteSideMenuView",
 
     data() {
         return {
-            sgp: ''
+            sgp: '',
+            devURL: api.defaults.devURL
         }
     },
 
@@ -41,7 +72,7 @@ export default {
                 .then(response => {
                     this.sgp = response.data.data.map((p) => new Menu(p));
                     console.log(this.sgp)
-
+                    console.log(this.devURL)
                 })
         }
     },

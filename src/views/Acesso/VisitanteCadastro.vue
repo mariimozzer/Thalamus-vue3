@@ -15,7 +15,7 @@
 
         <div class="row mt-3 mb-3" style="text-align: center;">
             <div class="col-sm-12">
-                <h2>{{ modoCadastro ? "Cadastrar" : "Editar" }} Visitante</h2>
+                <h2 class="titulo">{{ modoCadastro ? "Cadastrar" : "Editar" }} Visitante</h2>
             </div>
         </div>
 

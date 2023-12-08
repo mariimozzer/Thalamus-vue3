@@ -1,12 +1,17 @@
 <template>
+
+    <MenuLSGP></MenuLSGP>
+    
     <div class="container">
         <br>
         <div style="text-align: center; margin: 20px 0px 0px 0px;">
-            <h2>Acessos recentes</h2>
+            <h2 class="titulo">Acessos recentes</h2>
         </div>
         <div class="d-flex row flex-wrap">
+
             <!-- COLUNA 1 -->
             <div class="col-lg-6 col-md-12">
+
                 <div class="auto p-4">
 
                     <!-- local do acesso -->
@@ -66,21 +71,19 @@
                     </div>
                 </div>
             </div>
-            <!-- COLUNA 2 -->
-            <div class="col-lg-6 col-md-12">
-                <div class="d-flex row" style="border: solid 1px lightgray; border-radius: 20px; margin-top: 70px; margin-bottom: 20px; margin-left: 20px; margin-right: 20px;">
 
+            <!-- COLUNA 2 -->
+            <div class="col-lg-5 col-md-12">
+                <div class="d-flex row" style="border: solid 1px lightgray; border-radius: 20px; margin-top: 70px; margin-bottom: 20px; margin-left: 20px; margin-right: 20px;">
 
                     <!-- FOTO DA ÚLTIMA PESSOA QUE PASSOU NA CATRACA -->
 
                     <img v-if="mostraFoto" :src="fotoPessoa" alt="Foto Acesso"
                         style="object-fit:none; border: solid 1px lightgray; border-radius: 20px;" />
 
-
                     <!-- IMAGEM DE BACKGROUND QUANDO NÃO HÁ FOTO DE PESSOA -->
 
                     <img src="../../../public/img/user-avatar.png" v-if="!mostraFoto" alt="Foto Acesso" style="object-fit:contain" />
-
 
                 </div>
 
@@ -96,6 +99,7 @@
 
         <br><br><br>
     </div>
+    
 </template>
 
 <script>
@@ -104,6 +108,8 @@ import moment from 'moment-timezone';
 import api, { urlFoto } from '../../service/api';
 import WebSocketService from '../../service/websocketservice'
 import { createToaster } from "@meforma/vue-toaster";
+import MenuLSGP from '@/components/menuLateral/MenuLSGP.vue';
+
 
 const toaster = createToaster({
     position: "top-right",
@@ -116,6 +122,7 @@ export default {
 
 
     components: {
+        MenuLSGP,
 
     },
 
