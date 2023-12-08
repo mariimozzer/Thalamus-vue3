@@ -57,10 +57,10 @@
                         </table>
                         <div class="d-flex justify-content-end">
                             <div class="col-md-2 mr-3">
-                                <button type="button" class="btn btn-color" @click="alteraPag('prev')">Anterior</button>
+                                <button type="button" class="btn btn-primary" @click="alteraPag('prev')">Anterior</button>
                             </div>
                             <div class="col-md-2 ml-3">
-                                <button type="button" class="btn btn-color" @click="alteraPag('next')">Próxima</button>
+                                <button type="button" class="btn btn-primary" @click="alteraPag('next')">Próxima</button>
                             </div>
                         </div>
                     </div>
@@ -101,7 +101,7 @@
 <script>
 
 import moment from 'moment-timezone';
-import api from '../../service/api';
+import api, { urlFoto } from '../../service/api';
 import WebSocketService from '../../service/websocketservice'
 import { createToaster } from "@meforma/vue-toaster";
 
@@ -135,6 +135,9 @@ export default {
             wsService: new WebSocketService(),
             filtroNome: '',
             page: 1,
+            apiUrl: api.defaults.baseURL,
+
+            urlFoto: urlFoto.caminhoFoto,
         };
     },
 
@@ -164,15 +167,20 @@ export default {
         
 
         pesquisaComFiltro() {
+
             this.pesquisaAcessos(this.filtroNome);
+
         },
 
         async pesquisaAcessos(searchTerm = '') {
 
             try {
 
-                const response = await fetch(`http://192.168.0.6:8000/api/local/${this.localSelecionado}/acessos}`);
-                //const response = await fetch(`http://192.168.0.6:8000/api/acesso`);
+                //const response = await fetch(`http://192.168.0.6:8000/api/local/${this.localSelecionado}/acessos`);
+
+
+                const response = await fetch(`${this.apiUrl}/local/${this.localSelecionado}/acessos`);
+               
 
                 const responseData = await response.json();
 
@@ -210,7 +218,10 @@ export default {
 
         async buscaAcessos(pageAcesso) {
             try {
-                const response = await fetch(`${api.defaults.baseURL}/local/${this.localSelecionado}/acessos?page=${pageAcesso}`);
+               // const response = await fetch(`${api.defaults.baseURL}/local/${this.localSelecionado}/acessos?page=${pageAcesso}`);
+
+
+                const response = await fetch(`${this.apiUrl}/local/${this.localSelecionado}/acessos?page=${pageAcesso}`);
                 const responseData = await response.json();
 
                 this.acessos = responseData.data || [];
@@ -238,7 +249,10 @@ export default {
         async alterarLocal() {
             if (this.localSelecionado !== null) {
                 try {
-                    const response = await fetch(`${api.defaults.baseURL}/local/${this.localSelecionado}/acessos`);
+                   // const response = await fetch(`${api.defaults.baseURL}/local/${this.localSelecionado}/acessos`);
+
+
+                    const response = await fetch(`${this.apiUrl}/local/${this.localSelecionado}/acessos`);
                     const responseData = await response.json();
                     this.acessos = responseData.data || [];
                     localStorage.setItem('localSelecionado', JSON.stringify(this.localSelecionado));
@@ -255,7 +269,7 @@ export default {
         async buscaLocal() {
             try {
                 //const response = await fetch('http://192.168.0.6:8000/api/local');
-                const response = await fetch(`${api.defaults.baseURL}/local`);
+                const response = await fetch(`${this.apiUrl}/local`);
                 this.localData = await response.json();
             } catch (error) {
 
@@ -326,13 +340,7 @@ export default {
 };
 </script>
 
-<style>
-.custom-dropdown .dropdown-toggle {
-    background-color: orange;
-    border-color: orange;
-    color: white;
-}
-
+<style scoped> 
 .card-foto {
     min-height: 500px;
 }

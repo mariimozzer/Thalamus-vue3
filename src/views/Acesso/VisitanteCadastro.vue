@@ -66,24 +66,23 @@
                     
                     <h5>Foto do visitante</h5>
 
-                    <button class="mx-2 btn btn-primary" fab dark small @click="toggleCamera" v-if="!isCameraOpen">
-                        <span class="material-symbols-outlined">photo_camera</span>
+                    <button class="btn btn-primary rounded-pill" fab dark small @click="toggleCamera" v-if="!isCameraOpen">
+                        Abrir câmera
                     </button>
                     
 
-                    <button class="mx-2 btn btn-primary" fab dark small @click="toggleCamera"
-                        v-if="isCameraOpen && !isPhotoTaken">
-                        <span class="material-symbols-outlined">no_photography</span>
+                    <button class="mx-2 btn btn-primary rounded-pill" fab dark small @click="toggleCamera" v-if="isCameraOpen && !isPhotoTaken">
+                        Fechar câmera
                     </button>
 
-                    <button class="mx-2 btn btn-primary" fab dark small color="primary" @click="captureImage"
+                    <button class="mx-2 btn btn-primary rounded-pill" fab dark small color="primary" @click="captureImage"
                         v-if="isCameraOpen">
-                        <span class="material-symbols-outlined">add_a_photo</span>
+                        Tirar foto
                     </button>
 
-                    <button class="mx-2 btn btn-primary" fab dark small color="primary" @click="discardImage"
+                    <button class="mx-2 btn btn-primary rounded-pill" fab dark small color="primary" @click="discardImage"
                         v-if="isCameraOpen">
-                        <span class="material-symbols-outlined">delete</span>
+                       Descartar foto
                     </button>
 
                 </div>
@@ -104,7 +103,7 @@
                     <div class="mt-3">
 
                         <video ref="video" width="500" height="400" autoplay v-if="isCameraOpen && !isPhotoTaken"></video>
-                        <img :src="imagePath || imageBase64" alt="" v-if="isPhotoTaken" style="max-width: 100%; max-height: 400px;" />
+                        <img :src="imageBase64" alt="" v-if="isPhotoTaken" style="max-width: 100%; max-height: 400px;" />
 
                     </div>
                 </div>
@@ -260,7 +259,7 @@ export default {
             // this.isCameraOpen = true;
             this.isPhotoTaken = false;
             this.imageBase64 = '';
-            //this.openCamera();
+            this.openCamera();
         },
 
 

@@ -51,21 +51,19 @@
                             <td>{{ mostraGenero(item.sexo) }}</td>
                             <td>{{ item.celular }}</td>
                             <td>{{ item.email }}</td>
-                            <td style="text-align: center;">
+                            <td style="text-align: center;"> <!-- CADASTRAR VISITA -->
                                 <div>
-                                    <button type="button" class="btn-default" @click="abrirModal(item)">
+                                    <button type="button" class="btn-default" @click="abrirModal(item)" data-bs-toggle="tooltip" data-bs-placement="top" title="Clique para cadastrar visita">
                                         <i class="fa-solid fa-plus"></i>
                                     </button>
                                 </div>
                             </td>
                             <td>
                                 <div class="d-flex justify-content-start">
-                                    <button @click="editarPessoa(item)" class="btn-default"
-                                        style="margin-right: 20px;">
+                                    <button @click="editarPessoa(item)" class="btn-default" style="margin-right: 20px;" data-bs-toggle="tooltip" data-bs-placement="top" title="Clique para editar visitante">
                                         <i class="fa fa-edit icones-tabela" style="font-size: 18px; color: var(--first-color); "></i>
                                     </button>
-                                    <button type="button" data-bs-toggle="modal" data-bs-target="#staticBackdrop"
-                                        @click="excluirPessoa(item.id)" class="btn-default">
+                                    <button type="button" class="btn-default"  data-bs-toggle="modal" data-bs-target="#staticBackdrop" data-bs-placement="top" title="Clique para excluir visitante" @click="excluirPessoa(item.id)">
                                         <i class="fa fa-trash icones-tabela" style="font-size: 18px; color: var(--first-color); "></i>
                                     </button>
                                 </div>
@@ -242,7 +240,7 @@
 <script>
 import Setores from '../../models/setor.model'
 import setorService from '../../service/setor-service';
-import axios from 'axios';
+//import axios from 'axios';
 import WebSocketService from '../../service/websocketservice';
 import { createToaster } from "@meforma/vue-toaster";
 import api from '../../service/api';
@@ -340,10 +338,16 @@ export default {
 
             try {
 
-                const response = await fetch(`${api.defaults.baseURL}/local`);
+                const response = await api.get(`/local`);
                 //const response = await fetch('http://192.168.0.6:8000/api/local');
 
-                this.localData = await response.json();
+                //this.localData = await response.json();
+
+                console.log(response);
+
+                this.localData = response.data;
+
+                console.log(this.localData)
 
             } catch (error) {
 
@@ -357,12 +361,12 @@ export default {
 
                 try {
 
-                   const response = await fetch(`${api.defaults.baseURL}/local/${this.localSelecionado}/acessos`);
+                   const response = await api.get(`/local/${this.localSelecionado}/acessos`);
                    // const response = await fetch(`http://192.168.0.6:8000/api/local/${this.localSelecionado}/acessos`);
                    
-                   const responseData = await response.json();
+                  // const responseData = await response.json();
                    
-                   this.acessos = responseData.data || [];
+                   this.acessos = response.data || [];
 
                    console.log('Local', this.localSelecionado);
 
@@ -379,20 +383,23 @@ export default {
 
             try {
 
-                const response = await fetch(`${api.defaults.baseURL}/visitante`);
+                const response = await api.get(`/visitante`);
                 //const response = await fetch(`http://192.168.0.6:8000/api/visitante`);
 
-                const responseData = await response.json();
+                //const responseData = await response.json();
+                 //console.log(responseData)
 
-                this.visitantes = responseData.data || [];
+                this.visitantes = response.data.data || [];
 
-                this.lastPage = responseData.last_page || 1;
+                this.lastPage = response.data.last_page || 1;
 
                 this.page = 1;
 
                 this.visitantes = this.visitantes.filter(item => item.nomeCompleto.toLowerCase().includes(searchTerm.toLowerCase())
 
                 );
+
+                console.log(this.visitantes)
 
             } catch (error) {
 
@@ -476,7 +483,7 @@ export default {
 
                         this.mostraAlerta = true;
 
-                        console.log('Alerta qrcode lido', this.mostraAlerta);
+                        //console.log('Alerta qrcode lido', this.mostraAlerta);
 
                         // toaster.show(`QR Code lido com sucesso`, { type: "success" });
 
@@ -511,11 +518,15 @@ export default {
                 .then((resolvedCodes) => {
                     console.log('Detected Codes:', resolvedCodes.content);
 
-                    this.qrcodeWebcam = resolvedCodes.content
+                    //this.qrcodeWebcam = resolvedCodes.content
+                    this.qrcodeCartao = resolvedCodes.content
 
-                    console.log('codigo lido na webcam: ', this.qrcodeWebcam)
+                    console.log('codigo lido na webcam: ', this.qrcodeCartao)
 
                     this.mostraAlertaWebcam = true;
+
+                    this.cameraAberta = false;
+
                 })
                 .catch((error) => {
                     console.error('Error resolving detected codes:', error);
@@ -576,7 +587,7 @@ export default {
             this.qrCodeEmail = 'VX' + this.pessoaIDModal + this.pessoaNomeModal + this.setoresVisitante.toString() + this.localSelecionado + this.dataFormatada.replace(/\s/g, '');
             
 
-            const urlVisita = `${api.defaults.baseURL}/visita`
+            //const urlVisita = `${api.defaults.baseURL}/visita`
             //const urlVisita = 'http://192.168.0.6:8000/api/visita'
             
 
@@ -593,7 +604,8 @@ export default {
             };
 
 
-            axios.post(urlVisita, this.dadosVisitaModal)
+           // axios.post(urlVisita, this.dadosVisitaModal)
+            api.post(`/visita`, this.dadosVisitaModal)
                 .then(response => {
 
                     console.log(response.data);
@@ -671,7 +683,8 @@ export default {
             if (index !== -1) {
 
                 //axios.delete(`http://192.168.0.6:8000/api/visitante/${id}`)
-                axios.delete(`${api.defaults.baseURL}/visitante/${id}`)
+                //axios.delete(`${api.defaults.baseURL}/visitante/${id}`)
+                api.delete(`/visitante/${id}`)
                     .then(response => {
                         console.log('Response', response);
 
