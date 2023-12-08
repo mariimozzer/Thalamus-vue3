@@ -1,6 +1,7 @@
 <template>
     <div class="container">
         <br>
+
         <div class="mt-3">
             <div class="row">
                 <div class="col-12" style="text-align: center;">
@@ -20,7 +21,7 @@
                     </div>
                 </div>
                 <div class="col-lg-3 col-md-12 align-self-end float-right mt-3">
-                    <button type="button" class="btn btn-color" @click="adicionarPessoa" style="width: 190px;">
+                    <button type="button" class="btn b-button" @click="adicionarPessoa" style="width: 190px;">
                         Cadastrar Visitante&nbsp;&nbsp;<i class="fa-solid fa-user"></i></button>
                 </div>
             </div>
@@ -50,22 +51,20 @@
                             <td>{{ mostraGenero(item.sexo) }}</td>
                             <td>{{ item.celular }}</td>
                             <td>{{ item.email }}</td>
-                            <td style="text-align: center;">
+                            <td style="text-align: center;"> <!-- CADASTRAR VISITA -->
                                 <div>
-                                    <button type="button" class="btn btn-color-grey" @click="abrirModal(item)">
+                                    <button type="button" class="btn-default" @click="abrirModal(item)" data-bs-toggle="tooltip" data-bs-placement="top" title="Clique para cadastrar visita">
                                         <i class="fa-solid fa-plus"></i>
                                     </button>
                                 </div>
                             </td>
                             <td>
                                 <div class="d-flex justify-content-start">
-                                    <button @click="editarPessoa(item)" class="btn btn-color-grey"
-                                        style="margin-right: 20px;">
-                                        <i class="fa fa-edit icones-tabela" style="font-size: 18px; color: #fff; "></i>
+                                    <button @click="editarPessoa(item)" class="btn-default" style="margin-right: 20px;" data-bs-toggle="tooltip" data-bs-placement="top" title="Clique para editar visitante">
+                                        <i class="fa fa-edit icones-tabela" style="font-size: 18px; color: var(--first-color); "></i>
                                     </button>
-                                    <button type="button" data-bs-toggle="modal" data-bs-target="#staticBackdrop"
-                                        @click="excluirPessoa(item.id)" class="btn btn-color-grey">
-                                        <i class="fa fa-trash icones-tabela" style="font-size: 18px; color: #fff;"></i>
+                                    <button type="button" class="btn-default"  data-bs-toggle="modal" data-bs-target="#staticBackdrop" data-bs-placement="top" title="Clique para excluir visitante" @click="excluirPessoa(item.id)">
+                                        <i class="fa fa-trash icones-tabela" style="font-size: 18px; color: var(--first-color); "></i>
                                     </button>
                                 </div>
                             </td>
@@ -73,11 +72,12 @@
                     </tbody>
                 </table>
                 <div class="d-flex justify-content-end mt-3 align-items-baseline">
-                    <button type="button" class="btn btn-color" @click="buscaVisitantes(page - 1)" :disabled="page === 1">
+                    <button type="button" class="btn btn-primary" @click="buscaVisitantes(page - 1)"
+                        :disabled="page === 1">
                         Página Anterior
                     </button>
                     <span class="ml-2 mr-2">{{ page }} de {{ lastPage }}</span>
-                    <button type="button" class="btn btn-color" @click="buscaVisitantes(page + 1)"
+                    <button type="button" class="btn btn-primary" @click="buscaVisitantes(page + 1)"
                         :disabled="page === lastPage">
                         Próxima Página
                     </button>
@@ -88,41 +88,44 @@
         <!-- MODAL ADICIONAR VISITA -->
         <div class="modal-mask" v-if="showModal" @click="fecharModalFora">
             <div class="modal-container" style="display: flex; flex-flow: column;">
-                <!-- BODY DO MODAL -->
+
+               
                 <div class="d-flex justify-content-between align-items-center mb-4" style="display: flex;">
                     <h5>Cadastrar Nova Visita para {{ pessoaNomeModal }}</h5>
-                    <button type="button" class="btn-close mx-2" aria-label="Close" @click="fecharModal">
-
-                    </button>
+                    <button type="button" class="btn-close mx-2" aria-label="Close" @click="fecharModal"></button>
                 </div>
+
                 <!-- local -->
                 <div style="display: flex; width: 100%; padding: 0px; margin: 0px;">
-                    <select v-model="localSelecionado" @change="alterarLocal"
-                        class="select btn btn-color modal-estilo-linha">
-                        <option v-for="local in localData" :key="local.id" :value="local.id">{{ local.local_nome }}
-                        </option>
+                    <select v-model="localSelecionado" @change="alterarLocal" class="select btn btn-primary modal-estilo-linha">
+                        <option v-for="local in localData" :key="local.id" :value="local.id">{{ local.local_nome }}</option>
                     </select>
                 </div>
+
                 <!-- formulario -->
                 <div style="display:flex; flex-flow: row; padding-top:10px; padding-bottom: 20px; ">
+
                     <!-- coluna 1 -->
                     <div style="padding: 10px; width: 50%; display: flex; flex-flow: column; ">
                         <div style="display: flex; flex-flow: row;">
-                            <i class="fa-regular fa-calendar-days"></i>&nbsp;<p>Validade</p>&nbsp;<p style="color: red;">*
+                            <i class="fa-regular fa-calendar-days"></i>&nbsp;<p>Validade</p>&nbsp;<p
+                                style="color: red;">*
                             </p>
                         </div>
-                        <div style="display: flex; flex-flow: row;">
+
+                       <div style="display: flex; flex-flow: row;">
                             <div class="mr-5">
                                 <input class="form-control d-inline" value="1" type="number" id="dias" size="sm"
                                     style="width:50px;" />
                                 <label for="dias" class="d-inline ms-1">Dia(s)</label>
                             </div>
                             <div>
-                                <input class="form-control d-inline" type="number" max="24" id="horas" size="sm" value="0"
-                                    style="width:50px;" />
+                                <input class="form-control d-inline" type="number" max="24" id="horas" size="sm"
+                                    value="0" style="width:50px;" />
                                 <label for="horas" class="d-inline ms-1">Hora(s)</label>
                             </div>
                         </div>
+
                         <div style="display: flex; flex-flow: column; padding-top: 30px;">
                             <div style="display: flex; flex-flow: row;">
                                 <i class="fa-regular fa-calendar-days"></i>&nbsp;<p>Informações</p>
@@ -131,23 +134,37 @@
                                 <textarea class="form-control" id="info" rows="2" for="info"></textarea>
                             </div>
                         </div>
-                        <div style="display: flex; flex-flow: column; padding-top: 50px;">
+
+                        <div style="display: flex; flex-flow: row; padding-top: 50px; padding-bottom: 20px;">
+
+                            <div class="mr-3">
+
+                                <button type="button" class="btn btn-primary" @click="vincularCartao" style="width: 200px;">Vincular cartão tablet&nbsp;<i class="fa-regular fa-address-card"></i></button>
+
+                                <p v-if="this.mostraAlerta" style="color: green; font-weight: 600;">QR Code lido com sucesso</p>
+
+                            </div>                       
+
                             <div>
-                                <button type="button" class="btn btn-color" @click="vincularCartao">Vincular
-                                    cartão&nbsp;<i class="fa-regular fa-address-card"></i></button>
+                                <!--  <button type="button" class="btn btn-color" @click="vincularCartaoWebcam">Vincular cartão WebCam&nbsp;<i class="fa-regular fa-address-card"></i></button>
+ -->
+                                <button type="button" class="btn btn-primary" @click="iniciarLeituraWebcam" style="width: 220px;">Vincular cartão webcam&nbsp;<i class="fa-regular fa-address-card"></i></button>
+
+                                <p v-if="this.mostraAlertaWebcam" style="color: green; font-weight: 600;">QR Code lido com sucesso</p>
+
+                                <!--  <h3>{{ qrcodeWebcam }}</h3> -->
+
                             </div>
-
-
-
-                            <div v-if="this.mostraAlerta">
-                                    <p style="color: green; font-weight: 600;">QR Code lido com sucesso</p>
-                            </div>
-
-
 
                         </div>
+
+                        <qrcode-stream v-if="cameraAberta && !qrcodeWebcam" @detect="onDetect" style="height: 480px;" />
+                        <!--  <qrcode-stream @detect="onDetect"></qrcode-stream>-->
+
                     </div>
+
                     <!-- coluna 2 -->
+
                     <div style="padding: 10px; width: 50%;display: flex; flex-flow: column; ">
                         <div style="display: flex; flex-flow: row;">
                             <i class="fa-regular fa-building"></i>&nbsp;<p>Setor</p>&nbsp;<p style="color: red;">*
@@ -178,18 +195,23 @@
                             </table>
                         </div>
                     </div>
+
                 </div>
+
                 <!-- SALVAR VISITA -->
                 <div style="display: flex; flex-flow: row; justify-content: center;">
-                    <button type="button" class="btn btn-color float-end" @click="salvarVisita">Cadastrar
+                    <button type="button" class="btn btn-primary float-end" @click="salvarVisita">Cadastrar
                         &nbsp;<i class="fa-regular fa-circle-check"></i></button>
                 </div>
+
+
             </div>
         </div>
         <!-- fim modal -->
 
         <!-- Modal -->
-        <div class="modal fade" id="staticBackdrop" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal fade" id="staticBackdrop" tabindex="-1" aria-labelledby="staticBackdropLabel"
+            aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -200,24 +222,29 @@
                         <p>Confirma a exclusão do registro?</p>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-outline-color" data-bs-dismiss="modal">Cancelar</button>
-                        <button type="button" class="btn btn-color" @click="confirmarExclusao"
+                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" style="">Cancelar</button>
+                        <button type="button" class="btn btn-primary" @click="confirmarExclusao"
                             data-bs-dismiss="modal">Confirmar</button>
                     </div>
                 </div>
             </div>
         </div>
+
+
         <br><br><br>
+
+
     </div>
 </template>
 
 <script>
 import Setores from '../../models/setor.model'
 import setorService from '../../service/setor-service';
-import axios from 'axios';
+//import axios from 'axios';
 import WebSocketService from '../../service/websocketservice';
 import { createToaster } from "@meforma/vue-toaster";
 import api from '../../service/api';
+import { QrcodeStream } from 'vue-qrcode-reader'
 
 const toaster = createToaster({
     position: "top-right",
@@ -227,13 +254,9 @@ export default {
 
     name: 'VisitanteView',
 
-    setup() {
-
-        
-
-    },
-
     components: {
+
+        QrcodeStream,
 
     },
 
@@ -255,10 +278,8 @@ export default {
             localVisita: '',
             localId: '',
             filtroNome: '',
-            result: '',
-            error: '',
             qrcodeLeitura: '',
-            cameraVisivel: false,
+            cameraAberta: false,
             leuQrcodeCamera: '',
             visitantes: [],
             localSelecionado: '',
@@ -268,6 +289,9 @@ export default {
             mostraAlerta: false,
             wsService: new WebSocketService(),
             alertMessage: '',
+            qrcodeWebcam: null,
+            mostraAlertaWebcam: false
+
         }
     },
 
@@ -314,10 +338,16 @@ export default {
 
             try {
 
-                const response = await fetch(`${api.defaults.baseURL}/local`);
+                const response = await api.get(`/local`);
                 //const response = await fetch('http://192.168.0.6:8000/api/local');
 
-                this.localData = await response.json();
+                //this.localData = await response.json();
+
+                console.log(response);
+
+                this.localData = response.data;
+
+                console.log(this.localData)
 
             } catch (error) {
 
@@ -331,12 +361,12 @@ export default {
 
                 try {
 
-                   const response = await fetch(`${api.defaults.baseURL}/local/${this.localSelecionado}/acessos`);
+                   const response = await api.get(`/local/${this.localSelecionado}/acessos`);
                    // const response = await fetch(`http://192.168.0.6:8000/api/local/${this.localSelecionado}/acessos`);
                    
-                   const responseData = await response.json();
+                  // const responseData = await response.json();
                    
-                   this.acessos = responseData.data || [];
+                   this.acessos = response.data || [];
 
                    console.log('Local', this.localSelecionado);
 
@@ -353,20 +383,23 @@ export default {
 
             try {
 
-                const response = await fetch(`${api.defaults.baseURL}/visitante`);
+                const response = await api.get(`/visitante`);
                 //const response = await fetch(`http://192.168.0.6:8000/api/visitante`);
 
-                const responseData = await response.json();
+                //const responseData = await response.json();
+                 //console.log(responseData)
 
-                this.visitantes = responseData.data || [];
+                this.visitantes = response.data.data || [];
 
-                this.lastPage = responseData.last_page || 1;
+                this.lastPage = response.data.last_page || 1;
 
                 this.page = 1;
 
                 this.visitantes = this.visitantes.filter(item => item.nomeCompleto.toLowerCase().includes(searchTerm.toLowerCase())
 
                 );
+
+                console.log(this.visitantes)
 
             } catch (error) {
 
@@ -401,6 +434,8 @@ export default {
 
         },
 
+
+        //vincula cartao com tablet chamando pelo websocket
         vincularCartao() {
 
             // mensagem para WS com pedido para iniciar leitor e id do local
@@ -432,7 +467,8 @@ export default {
 
         },
 
-        handleMessage(event) {
+        // trata a mensagem do WS com o qrcode lido no tablet
+         handleMessage(event) {
             try {
 
                 if (event && event.data) {
@@ -440,16 +476,17 @@ export default {
                     const messageData = JSON.parse(this.message);
 
                     if (messageData.mensagem === "qr_capturado") {
-                        this.qrCodeCartao = messageData.qrcode;
-                        console.log('Qrcode lido no cartao: ', this.qrCodeCartao);
 
+                        this.qrCodeCartao = messageData.qrcode;
+
+                        console.log('Qrcode lido no cartao: ', this.qrCodeCartao);
 
                         this.mostraAlerta = true;
 
-              
-                     // toaster.show(`QR Code lido com sucesso`, { type: "success" });
+                        //console.log('Alerta qrcode lido', this.mostraAlerta);
 
-                  
+                        // toaster.show(`QR Code lido com sucesso`, { type: "success" });
+
                     }
                 }
 
@@ -461,6 +498,42 @@ export default {
                 console.error(error);
             }
         },
+
+
+        iniciarLeituraWebcam() {
+            this.cameraAberta = true;
+            this.mostraAlertaWebcam = false;
+        },
+
+
+        vincularCartaoWebcam() {
+
+            this.onDetect()
+            
+        },
+
+
+   onDetect(detectedCodes) {
+            detectedCodes
+                .then((resolvedCodes) => {
+                    console.log('Detected Codes:', resolvedCodes.content);
+
+                    //this.qrcodeWebcam = resolvedCodes.content
+                    this.qrcodeCartao = resolvedCodes.content
+
+                    console.log('codigo lido na webcam: ', this.qrcodeCartao)
+
+                    this.mostraAlertaWebcam = true;
+
+                    this.cameraAberta = false;
+
+                })
+                .catch((error) => {
+                    console.error('Error resolving detected codes:', error);
+                });
+        },        
+
+
 
         salvarVisita() {
 
@@ -514,7 +587,7 @@ export default {
             this.qrCodeEmail = 'VX' + this.pessoaIDModal + this.pessoaNomeModal + this.setoresVisitante.toString() + this.localSelecionado + this.dataFormatada.replace(/\s/g, '');
             
 
-            const urlVisita = `${api.defaults.baseURL}/visita`
+            //const urlVisita = `${api.defaults.baseURL}/visita`
             //const urlVisita = 'http://192.168.0.6:8000/api/visita'
             
 
@@ -531,7 +604,8 @@ export default {
             };
 
 
-            axios.post(urlVisita, this.dadosVisitaModal)
+           // axios.post(urlVisita, this.dadosVisitaModal)
+            api.post(`/visita`, this.dadosVisitaModal)
                 .then(response => {
 
                     console.log(response.data);
@@ -609,7 +683,8 @@ export default {
             if (index !== -1) {
 
                 //axios.delete(`http://192.168.0.6:8000/api/visitante/${id}`)
-                axios.delete(`${api.defaults.baseURL}/visitante/${id}`)
+                //axios.delete(`${api.defaults.baseURL}/visitante/${id}`)
+                api.delete(`/visitante/${id}`)
                     .then(response => {
                         console.log('Response', response);
 
@@ -679,6 +754,8 @@ export default {
             this.pessoaNomeModal = pessoa.nomeCompleto;
             this.pessoaCPFModal = pessoa.CPF;
             this.pessoaEmail = pessoa.email;
+            this.mostraAlerta = false;
+
         },
 
         limparCampos() {
@@ -695,15 +772,12 @@ export default {
             this.dataCapturada = null;
             this.localVisita = '';
             this.localId = '';
-            this.filtroNome = '';
-            this.result = '';
-            this.error = '';
             this.qrcodeLeitura = '';
-            this.cameraVisivel = false;
+            this.cameraAberta = false;
             this.leuQrcodeCamera = '';
             this.mostraAlerta = false;
-            //this.mostraAlertaErro = false;
             this.alertMessage = '';
+            this.mostraAlertaWebcam = false;
         },
 
         fecharModalFora(event) {
@@ -724,7 +798,14 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
+
+qrcode-stream{
+max-width: 100px;
+max-height: 100px;
+
+}
+
 @media (max-width: 700px) {
     .botao-campo {
         flex-direction: column;
@@ -776,4 +857,10 @@ export default {
         padding: 10px;
     }
 }
+
 </style>
+
+
+
+
+
