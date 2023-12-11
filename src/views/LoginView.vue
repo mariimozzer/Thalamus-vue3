@@ -22,12 +22,12 @@
             </div>
             <br>
     
-            <div class="form-check ">
-                <input class="form-check-input" type="radio" id="roboflex" value="roboflex" v-model="local">
-                <label class="form-check-label" for="roboflex"> Roboflex </label>
-                <br>
-                <input class="form-check-input" type="radio" id="zontec" value="zontec" v-model="local">
-                <label class="form-check-label" for="zontec"> Zontec </label>
+            <div class="form-check">
+                <label v-for="local in localData" :key="local.id" class="form-check-label">
+                    <br>
+                    <input class="form-check-input" type="radio" :value="local.id" v-model="localSelecionado" />
+                    {{ local.local_nome }}
+                </label> 
             </div>
 
             <br>
@@ -38,7 +38,7 @@
                                               <span v-if="loading">Processando...</span>
                                             </Button>
             </div>
-    
+     
             <div class="col-sm-12" style="text-align: center; font-size: 15px;">
                 <a href="/esqueceuSenha" style="color: rgb(0, 0, 0);">Esqueceu sua senha ?</a>
             </div>
@@ -50,6 +50,7 @@
 import axios from 'axios';
 import Button from '../components/button/ButtonComponent.vue';
 import { createToaster } from "@meforma/vue-toaster";
+import api from '@/service/api'
 
 const toaster = createToaster({
     position: "top-right",
@@ -73,21 +74,35 @@ export default {
             id: '',
             loading: false,
             user: null,
+            localData: [],
+            localSelecionado:'',
+        }
+    },
+
+    created() {
+        this.buscaLocal();
+        const localSelecionado = localStorage.getItem('local');
+        if (localSelecionado) {
+            this.localSelecionado = localSelecionado;
         }
     },
 
     mounted() {
-        if (localStorage.local) {
-            this.local = localStorage.local
+        if (localStorage.localSelecionado) {
+            this.localSelecionado = localStorage.localSelecionado
         }
 
-
-
+        this.buscaLocal();
     },
 
     watch: {
         local(newLocal) {
-            localStorage.local = newLocal;
+            localStorage.localSelecionado = newLocal;
+        },
+
+        localSelecionado(localSelecionado) {
+            this.localSelecionado = localSelecionado; 
+            localStorage.localSelecionado = localSelecionado;
         }
     },
 
@@ -129,6 +144,26 @@ export default {
             )
         },
 
+        async buscaLocal() {
+            try {
+                const response = await api.get(`/local`);
+                this.localData = response.data;
+            } catch (error) {
+                console.error('Error:', error);
+                toaster.show(`Erro ao buscar empresas`, { type: "error" });
+            }
+        },
+        async alterarLocal() {
+            if (this.localSelecionado !== null) {
+                try {
+                    const response = await api.get(`/local/${this.localSelecionado}/acessos`);
+                    this.acessos = response.data || [];
+                } catch (error) {
+                    console.error('Error', error);
+                }
+            }
+        },
+
     }
 }
 </script>
@@ -147,6 +182,7 @@ export default {
     margin-top: 10px;
     padding: 30px;
     border-radius: 20px;
+    margin-left: 300px;
 }
 
 .logo {

@@ -71,8 +71,8 @@ export default {
             `)
                 .then(response => {
                     this.sgp = response.data.data.map((p) => new Menu(p));
-                    console.log(this.sgp)
-                    console.log(this.devURL)
+                   // console.log(this.sgp)
+                   // console.log(this.devURL)
                 })
         }
     },
