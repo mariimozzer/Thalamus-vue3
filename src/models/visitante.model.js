@@ -1,4 +1,5 @@
 export default class Visitante {
+    
     constructor(obj){
         
         obj = obj || {};

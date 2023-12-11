@@ -1,0 +1,80 @@
+-- leitor webcam 
+
+    iniciarLeituraWebcam() {
+            this.cameraAberta = true;
+            this.mostraAlertaWebcam = false;
+        },
+
+        vincularCartaoWebcam() {
+            this.onDetect()    
+        },
+
+        onDetect(detectedCodes) {
+            detectedCodes
+                .then((resolvedCodes) => {
+                    console.log('Detected Codes:', resolvedCodes.content);
+                    this.qrcodeCartao = resolvedCodes.content
+                    console.log('leu na webcam: ', this.qrcodeCartao)
+                    this.mostraAlertaWebcam = true;
+                    this.cameraAberta = false;
+                })
+                .catch((error) => {
+                    console.error('Error resolving detected codes:', error);
+                });
+        },    
+
+
+-- leitor tablet
+
+    vincularCartao() {
+            const chamaLeitorQrcode = JSON.stringify({
+                mensagem: 'iniciar_leitor',
+                local_id: this.localSelecionado
+            });
+            this.wsService.send(chamaLeitorQrcode);
+            const timeout = 2000;
+            const timeoutId = setTimeout(() => {
+            toaster.show(`Leitor que QR Code não está respondendo`, { type: "error" });
+            }, timeout);
+            this.wsService.addListener(() => {
+                clearTimeout(timeoutId);
+            });
+        },
+
+    handleMessage(event) {
+            try {
+                if (event && event.data) {
+                    this.message = event.data;
+                    const messageData = JSON.parse(this.message);
+                    if (messageData.mensagem === "qr_capturado") {
+                        this.qrCodeCartao = messageData.qrcode;
+                        console.log('leu no tablet:', this.qrCodeCartao);
+                        this.mostraAlerta = true;
+                    }
+                }
+                else {
+                    console.error(event);
+                }
+            }
+            catch (error) {
+                console.error(error);
+            }
+        },
+
+
+-- botoe
+
+<div class="mr-3">
+                                <button type="button" class="btn btn-primary" @click="vincularCartao"
+                                    style="width: 200px;">Vincular cartão tablet&nbsp;<i
+                                        class="fa-regular fa-address-card"></i></button>
+                                <p v-if="this.mostraAlerta" style="color: green; font-weight: 600;">QR Code lido com
+                                    sucesso</p>
+                            </div>
+                            <div>
+                                <button type="button" class="btn btn-primary" @click="iniciarLeituraWebcam"
+                                    style="width: 220px;">Vincular cartão webcam&nbsp;<i
+                                        class="fa-regular fa-address-card"></i></button>
+                                <p v-if="this.mostraAlertaWebcam" style="color: green; font-weight: 600;">QR Code lido
+                                    com sucesso</p>
+                            </div> 
