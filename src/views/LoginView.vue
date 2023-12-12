@@ -22,9 +22,8 @@
             </div>
             <br>
     
-            <div class="form-check">
-                <label v-for="local in localData" :key="local.id" class="form-check-label">
-                    <br>
+            <div class="form-check" style="display: flex; flex-flow: column;">
+                <label v-for="local in localData" :key="local.id" class="form-check-label mb-2">
                     <input class="form-check-input" type="radio" :value="local.id" v-model="localSelecionado" />
                     {{ local.local_nome }}
                 </label> 

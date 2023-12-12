@@ -60,14 +60,32 @@
                                 </tr>
                             </tbody>
                         </table>
-                        <div class="d-flex justify-content-end">
+                        <!-- <div class="d-flex justify-content-end">
                             <div class="col-md-2 mr-3">
                                 <button type="button" class="btn btn-primary" @click="alteraPag('prev')">Anterior</button>
                             </div>
                             <div class="col-md-2 ml-3">
                                 <button type="button" class="btn btn-primary" @click="alteraPag('next')">Próxima</button>
                             </div>
-                        </div>
+                        </div> -->
+                        <nav>
+                        <ul class="pagination">
+                            <li class="page-item" :class="{ disabled: currentPage === 1 }">
+                                <a class="page-link" href="#" aria-label="Previous"
+                                    @click="buscarTodosVisitantes(page - 1)">
+                                    <span aria-hidden="true">&laquo;</span>
+                                </a>
+                            </li>
+                            <li v-for="n in totalPages" :key="n" class="page-item" :class="{ active: n === currentPage }">
+                                <a class="page-link" href="#" @click="buscarTodosVisitantes(n)">{{ n }}</a>
+                            </li>
+                            <li class="page-item" :class="{ disabled: currentPage === totalPages - 1 }">
+                                <a class="page-link" href="#" aria-label="Next" @click="buscarTodosVisitantes(totalPages)">
+                                    <span aria-hidden="true">&raquo;</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
                     </div>
                 </div>
             </div>
@@ -134,22 +152,32 @@ export default {
             fotoPessoa: '',
             mostraFoto: false,
             filtro: '',
-            showModal: false,
+            filtroNome: '',
+           
             pageAcesso: 1,
             localSelecionado: 1,
             localData: [],
-            lastPage: null,
-            wsService: new WebSocketService(),
-            filtroNome: '',
-            page: 1,
-            apiUrl: api.defaults.baseURL,
 
+            wsService: new WebSocketService(),  
+           
+            apiUrl: api.defaults.baseURL,
             urlFoto: urlFoto.caminhoFoto,
+
+            lastPage: null,
+            currentPage: null,
+            totalPages: null,
+            page: 1,
         };
     },
 
-    created() {
-        this.wsService.addListener(this.handleMessage);
+    created() {     
+        const localSelecionadoStorage = localStorage.getItem('localSelecionado');
+        if (localSelecionadoStorage) {
+            this.localSelecionado = JSON.parse(localSelecionadoStorage);
+            this.alterarLocal();
+        }
+
+         this.wsService.addListener(this.handleMessage);
     },
 
     beforeUnmount() {
@@ -158,47 +186,33 @@ export default {
     },
 
     mounted() {
-        this.buscaLocal();
-        const localSelecionadoStorage = localStorage.getItem('localSelecionado');
-        if (localSelecionadoStorage) {
-            this.localSelecionado = JSON.parse(localSelecionadoStorage);
-            this.alterarLocal();
-        }
-
+        this.buscaLocal();        
         this.buscaAcessos(this.page);
+    },
 
+    computed: {
+
+        paginatedData() {
+            const startIndex = this.currentPage * this.itemsPerPage;
+            const endIndex = startIndex + this.itemsPerPage;
+            return this.visitantes.slice(startIndex, endIndex);
+        },
     },
 
     methods: {
 
-        
-
         pesquisaComFiltro() {
-
             this.pesquisaAcessos(this.filtroNome);
-
         },
 
         async pesquisaAcessos(searchTerm = '') {
-
             try {
-
-                //const response = await fetch(`http://192.168.0.6:8000/api/local/${this.localSelecionado}/acessos`);
-
-
-                const response = await fetch(`${this.apiUrl}/local/${this.localSelecionado}/acessos`);
-               
-
-                const responseData = await response.json();
-
-                this.acessos = responseData.data || [];
-
-                this.lastPage = responseData.last_page || 1;
-
+                const response = await api.get(`/local/${this.localSelecionado}/acessos`);
+                //const responseData = await response.json();
+                this.acessos = response.data.data;
+                this.lastPage = response.last_page;
                 this.page = 1;
-
                 this.acessos = this.acessos.filter(item => item.nomeCompleto.toLowerCase().includes(searchTerm.toLowerCase())
-
                 );
 
             } catch (error) {

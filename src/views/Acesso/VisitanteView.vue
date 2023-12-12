@@ -262,8 +262,6 @@ export default {
             visitantes: [],
             localSelecionado: '',
             localData: [],
-            page: 1,
-            lastPage: null,
             mostraAlerta: false,
             wsService: new WebSocketService(),
             alertMessage: '',
@@ -271,6 +269,8 @@ export default {
             mostraAlertaWebcam: false,
             qrcodeCartao: '',
             message: '',
+            page: 1,
+            lastPage: null,
             currentPage: null,
             totalPages: null,
         }
@@ -339,7 +339,7 @@ export default {
                 api.delete(`/visitante/${id}`)
                     .then(response => {
                         console.log('Response', response);
-                        this.buscaVisitantes(this.page);
+                        this.buscarTodosVisitantes(this.page);
                     })
                     .catch(error => {
                         console.error(`Error`, error);
